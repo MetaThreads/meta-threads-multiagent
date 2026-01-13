@@ -15,39 +15,13 @@ LangGraph-based AI agent for automated Threads posting with web search capabilit
 
 ## Architecture
 
-```
-User Request
-     │
-     ▼
-┌─────────────┐
-│   Planning  │  ← Creates execution plan
-│    Agent    │
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ Orchestrator│  ← Routes to agents in loop
-│    Agent    │◄────────────────────┐
-└──────┬──────┘                     │
-       │                            │
-   ┌───┴───┐                        │
-   ▼       ▼                        │
-┌─────┐ ┌─────────┐                 │
-│ Web │ │ Threads │─────────────────┘
-│Search│ │  Agent  │
-└─────┘ └────┬────┘
-             │
-             ▼
-      ┌────────────┐
-      │Threads MCP │
-      └────────────┘
-             │
-             ▼
-      ┌────────────┐
-      │  Response  │  ← Generates final output
-      │   Agent    │
-      └────────────┘
-```
+![LangGraph Workflow](examples/workflow_graph.png)
+
+The workflow follows this pattern:
+1. **Planning** - Analyzes user request and creates an execution plan
+2. **Orchestrator** - Routes to appropriate agents based on plan steps
+3. **Threads / Web Search** - Execute actions and loop back to orchestrator
+4. **Response** - Generates final human-readable output when all steps complete
 
 ## Installation
 
