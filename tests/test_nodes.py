@@ -1,15 +1,16 @@
 """Tests for graph node functions."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock
 
+import pytest
+
 from threads_multiagent.graph.nodes import (
-    planning_node,
-    orchestrator_node,
-    threads_node,
-    response_node,
-    web_search_node,
     create_node_functions,
+    orchestrator_node,
+    planning_node,
+    response_node,
+    threads_node,
+    web_search_node,
 )
 
 

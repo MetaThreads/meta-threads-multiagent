@@ -21,9 +21,7 @@ class StreamEvent(BaseModel):
     )
     content: str | None = Field(default=None, description="Text content for token events")
     agent_name: str | None = Field(default=None, description="Agent name for agent events")
-    status: Literal["started", "completed"] | None = Field(
-        default=None, description="Agent status"
-    )
+    status: Literal["started", "completed"] | None = Field(default=None, description="Agent status")
     tool_name: str | None = Field(default=None, description="Tool name for tool_call events")
     tool_args: dict[str, Any] | None = Field(default=None, description="Tool arguments")
     tool_result: Any | None = Field(default=None, description="Tool execution result")

@@ -1,9 +1,7 @@
 """Tests for graph module."""
 
-import pytest
-
-from threads_multiagent.graph.state import AgentState, create_initial_state
 from threads_multiagent.graph.edges import route_from_orchestrator, should_continue
+from threads_multiagent.graph.state import AgentState, create_initial_state
 
 
 class TestAgentState:

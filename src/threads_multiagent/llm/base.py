@@ -1,7 +1,8 @@
 """Base LLM client abstraction."""
 
 from abc import ABC, abstractmethod
-from typing import Any, AsyncIterator
+from collections.abc import AsyncGenerator
+from typing import Any
 
 from threads_multiagent.models.messages import Message
 
@@ -31,13 +32,13 @@ class BaseLLMClient(ABC):
         ...
 
     @abstractmethod
-    async def stream(
+    def stream(
         self,
         messages: list[Message],
         temperature: float = 0.7,
         max_tokens: int | None = None,
         **kwargs: Any,
-    ) -> AsyncIterator[str]:
+    ) -> AsyncGenerator[str, None]:
         """Stream a completion from messages."""
         ...
 

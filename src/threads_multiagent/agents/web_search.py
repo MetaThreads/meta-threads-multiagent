@@ -131,8 +131,7 @@ class WebSearchAgent(BaseAgent):
 
         # Build results text
         results_text = "\n\n".join(
-            f"**{r['title']}** ({r['source']})\n{r['snippet']}\nURL: {r['url']}"
-            for r in results
+            f"**{r['title']}** ({r['source']})\n{r['snippet']}\nURL: {r['url']}" for r in results
         )
 
         # Build context

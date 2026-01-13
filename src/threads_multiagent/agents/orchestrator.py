@@ -62,7 +62,7 @@ class OrchestratorAgent(BaseAgent):
         parts.append("\nExecution Plan:")
         for i, step in enumerate(plan.steps):
             status = "COMPLETED" if step.completed else "PENDING"
-            parts.append(f"  {i+1}. [{status}] {step.agent}: {step.action}")
+            parts.append(f"  {i + 1}. [{status}] {step.agent}: {step.action}")
             if step.result:
                 parts.append(f"      Result: {step.result[:200]}...")
 
@@ -75,7 +75,9 @@ class OrchestratorAgent(BaseAgent):
                 if web_results:
                     parts.append("Web search results:")
                     for result in web_results[:3]:
-                        parts.append(f"  - {result.get('title', 'No title')}: {result.get('snippet', '')[:100]}...")
+                        parts.append(
+                            f"  - {result.get('title', 'No title')}: {result.get('snippet', '')[:100]}..."
+                        )
                 else:
                     parts.append("Web search results: No results found")
 
@@ -197,7 +199,12 @@ class OrchestratorAgent(BaseAgent):
                     agent = mod.get("agent")
                     action = mod.get("action", "").lower()
 
-                    communication_keywords = ["inform the user", "tell the user", "explain to", "notify the user"]
+                    communication_keywords = [
+                        "inform the user",
+                        "tell the user",
+                        "explain to",
+                        "notify the user",
+                    ]
                     is_communication = any(kw in action for kw in communication_keywords)
 
                     if is_communication:
@@ -274,9 +281,7 @@ class OrchestratorAgent(BaseAgent):
         # Tool 4: Process decision
         return self._tool_process_decision(state, plan, decision)
 
-    def get_next_agent(
-        self, state: "AgentState"
-    ) -> Literal["threads", "web_search", "response"]:
+    def get_next_agent(self, state: "AgentState") -> Literal["threads", "web_search", "response"]:
         """Get the next agent from state."""
         next_agent = state.get("next_agent", "response")
         if next_agent in ("threads", "web_search", "response"):

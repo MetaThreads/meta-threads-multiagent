@@ -2,8 +2,6 @@
 
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from threads_multiagent.tracing.langfuse_tracer import LangfuseTracer, get_tracer
 
 
@@ -58,7 +56,7 @@ class TestLangfuseTracer:
 
     @patch("threads_multiagent.tracing.langfuse_tracer.CallbackHandler")
     @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
-    def test_get_callback_handler(self, mock_langfuse, mock_handler):
+    def test_get_callback_handler(self, _mock_langfuse, mock_handler):
         """Test getting callback handler."""
         tracer = LangfuseTracer(
             secret_key="sk-test",
@@ -70,7 +68,7 @@ class TestLangfuseTracer:
         mock_handler.assert_called_once_with()
 
     @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
-    def test_build_config_metadata(self, mock_langfuse):
+    def test_build_config_metadata(self, _mock_langfuse):
         """Test building config metadata for SDK v3."""
         tracer = LangfuseTracer(
             secret_key="sk-test",
@@ -91,7 +89,7 @@ class TestLangfuseTracer:
         assert metadata["key"] == "value"
 
     @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
-    def test_build_config_metadata_minimal(self, mock_langfuse):
+    def test_build_config_metadata_minimal(self, _mock_langfuse):
         """Test building config metadata with minimal args."""
         tracer = LangfuseTracer(
             secret_key="sk-test",
@@ -106,7 +104,7 @@ class TestLangfuseTracer:
 
     @patch("threads_multiagent.tracing.langfuse_tracer.get_client")
     @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
-    def test_flush(self, mock_langfuse, mock_get_client):
+    def test_flush(self, _mock_langfuse, mock_get_client):
         """Test flushing traces."""
         mock_client = MagicMock()
         mock_get_client.return_value = mock_client
@@ -121,7 +119,7 @@ class TestLangfuseTracer:
 
     @patch("threads_multiagent.tracing.langfuse_tracer.get_client")
     @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
-    def test_shutdown(self, mock_langfuse, mock_get_client):
+    def test_shutdown(self, _mock_langfuse, mock_get_client):
         """Test shutting down tracer."""
         mock_client = MagicMock()
         mock_get_client.return_value = mock_client

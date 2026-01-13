@@ -4,9 +4,10 @@ Uses Langfuse's OpenAI wrapper for automatic token usage and cost tracking.
 """
 
 import json
-from typing import Any, AsyncIterator
+from collections.abc import AsyncGenerator
+from typing import Any
 
-from langfuse.openai import AsyncOpenAI
+from langfuse.openai import AsyncOpenAI  # type: ignore[attr-defined]
 from openai import APIConnectionError, APIStatusError, RateLimitError
 
 from threads_multiagent.exceptions import (
@@ -105,12 +106,12 @@ class OpenRouterClient(BaseLLMClient):
         temperature: float = 0.7,
         max_tokens: int | None = None,
         **kwargs: Any,
-    ) -> AsyncIterator[str]:
+    ) -> AsyncGenerator[str, None]:
         """Stream a completion from messages."""
         try:
             openai_messages = [msg.to_openai_format() for msg in messages]
 
-            stream = await self._client.chat.completions.create(
+            response = await self._client.chat.completions.create(
                 model=self._model,
                 messages=openai_messages,  # type: ignore
                 temperature=temperature,
@@ -119,7 +120,8 @@ class OpenRouterClient(BaseLLMClient):
                 **kwargs,
             )
 
-            async for chunk in stream:
+            # Response is AsyncStream when stream=True
+            async for chunk in response:  # type: ignore[union-attr]
                 if chunk.choices and chunk.choices[0].delta.content:
                     yield chunk.choices[0].delta.content
 
@@ -162,11 +164,15 @@ class OpenRouterClient(BaseLLMClient):
             tool_calls: list[dict[str, Any]] = []
             if choice.message.tool_calls:
                 for tc in choice.message.tool_calls:
-                    tool_calls.append({
-                        "id": tc.id,
-                        "name": tc.function.name,
-                        "arguments": json.loads(tc.function.arguments),
-                    })
+                    # Only process function-type tool calls
+                    if hasattr(tc, "function") and tc.function is not None:
+                        tool_calls.append(
+                            {
+                                "id": tc.id,
+                                "name": tc.function.name,
+                                "arguments": json.loads(tc.function.arguments),
+                            }
+                        )
                 logger.debug(f"Tool calls extracted: {[tc['name'] for tc in tool_calls]}")
 
             return message, tool_calls
@@ -205,7 +211,7 @@ class OpenRouterClient(BaseLLMClient):
             response = await self._client.responses.create(
                 model=self._model,
                 input=input,
-                tools=tools,
+                tools=tools,  # type: ignore[arg-type]
                 **kwargs,
             )
 

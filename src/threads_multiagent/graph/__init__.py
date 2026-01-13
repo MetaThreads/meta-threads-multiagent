@@ -1,7 +1,7 @@
 """LangGraph workflow definitions."""
 
 from threads_multiagent.graph.state import AgentState, create_initial_state
-from threads_multiagent.graph.workflow import build_workflow, WorkflowRunner
+from threads_multiagent.graph.workflow import WorkflowRunner, build_workflow
 
 __all__ = [
     "AgentState",

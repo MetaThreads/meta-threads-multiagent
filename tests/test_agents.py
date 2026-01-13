@@ -1,13 +1,13 @@
 """Tests for agent implementations."""
 
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
-from threads_multiagent.agents.planning import PlanningAgent
+import pytest
+
 from threads_multiagent.agents.orchestrator import OrchestratorAgent
-from threads_multiagent.agents.web_search import WebSearchAgent
+from threads_multiagent.agents.planning import PlanningAgent
 from threads_multiagent.agents.response import ResponseAgent
-from threads_multiagent.models.agents import Plan, PlanStep
+from threads_multiagent.agents.web_search import WebSearchAgent
 from threads_multiagent.search.base import SearchResult
 
 
@@ -23,14 +23,16 @@ def mock_llm():
 def mock_web_search():
     """Create a mock web search."""
     search = MagicMock()
-    search.search = AsyncMock(return_value=[
-        SearchResult(
-            title="Test Article",
-            url="https://example.com/test",
-            snippet="Test snippet content",
-            source="example.com",
-        )
-    ])
+    search.search = AsyncMock(
+        return_value=[
+            SearchResult(
+                title="Test Article",
+                url="https://example.com/test",
+                snippet="Test snippet content",
+                source="example.com",
+            )
+        ]
+    )
     return search
 
 
@@ -73,7 +75,7 @@ class TestPlanningAgent:
     async def test_invoke_creates_plan(self, mock_llm, sample_state):
         """Test that invoke creates a plan."""
         mock_response = MagicMock()
-        mock_response.content = '''{"goal": "Find crypto news", "steps": [{"agent": "web_search", "action": "Search for news"}]}'''
+        mock_response.content = """{"goal": "Find crypto news", "steps": [{"agent": "web_search", "action": "Search for news"}]}"""
         mock_llm.complete.return_value = mock_response
 
         agent = PlanningAgent(mock_llm)
@@ -246,7 +248,9 @@ class TestWebSearchAgent:
         mock_llm.complete.return_value = mock_response
 
         agent = WebSearchAgent(mock_llm, mock_web_search)
-        results = [{"title": "Test", "url": "http://test.com", "snippet": "Test", "source": "test.com"}]
+        results = [
+            {"title": "Test", "url": "http://test.com", "snippet": "Test", "source": "test.com"}
+        ]
         synthesis = await agent._tool_synthesize(results, "user request", "goal")
 
         assert synthesis == "Summary of search results"
@@ -268,7 +272,9 @@ class TestWebSearchAgent:
 
         sample_state["plan"] = {
             "goal": "Find news",
-            "steps": [{"agent": "web_search", "action": "Search", "completed": False, "result": None}],
+            "steps": [
+                {"agent": "web_search", "action": "Search", "completed": False, "result": None}
+            ],
             "current_step_index": 0,
         }
 
@@ -307,9 +313,7 @@ class TestResponseAgent:
 
     def test_tool_build_context_with_threads_results(self, mock_llm, sample_state):
         """Test context building with threads results."""
-        sample_state["threads_results"] = [
-            {"action": "post", "result": '{"id": "123"}'}
-        ]
+        sample_state["threads_results"] = [{"action": "post", "result": '{"id": "123"}'}]
 
         agent = ResponseAgent(mock_llm)
         context = agent._tool_build_context(sample_state)

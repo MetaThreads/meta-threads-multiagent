@@ -1,6 +1,7 @@
 """Pytest fixtures for tests."""
 
 import os
+
 import pytest
 
 
@@ -18,6 +19,7 @@ def setup_test_env():
 def clear_settings_cache():
     """Clear settings cache before each test."""
     from threads_multiagent.config import get_settings
+
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()

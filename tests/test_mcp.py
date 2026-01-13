@@ -1,10 +1,11 @@
 """Tests for MCP client implementation."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
-import httpx
 
-from threads_multiagent.mcp.client import MCPClient, BearerAuth
+import httpx
+import pytest
+
+from threads_multiagent.mcp.client import BearerAuth, MCPClient
 
 
 class TestBearerAuth:
@@ -30,7 +31,7 @@ class TestMCPClient:
 
     def test_initialization(self):
         """Test client initialization."""
-        with patch('threads_multiagent.mcp.client.Client'):
+        with patch("threads_multiagent.mcp.client.Client"):
             client = MCPClient(
                 server_url="https://mcp.example.com",
                 bearer_token="test-token",
@@ -44,7 +45,7 @@ class TestMCPClient:
 
     def test_initialization_without_token(self):
         """Test client initialization without bearer token."""
-        with patch('threads_multiagent.mcp.client.Client'):
+        with patch("threads_multiagent.mcp.client.Client"):
             client = MCPClient(
                 server_url="https://mcp.example.com",
             )
@@ -53,14 +54,14 @@ class TestMCPClient:
 
     def test_get_tools_for_openai_empty(self):
         """Test get_tools_for_openai when no tools loaded."""
-        with patch('threads_multiagent.mcp.client.Client'):
+        with patch("threads_multiagent.mcp.client.Client"):
             client = MCPClient(server_url="https://mcp.example.com")
             tools = client.get_tools_for_openai()
             assert tools == []
 
     def test_get_tools_for_openai_with_tools(self):
         """Test get_tools_for_openai with loaded tools."""
-        with patch('threads_multiagent.mcp.client.Client'):
+        with patch("threads_multiagent.mcp.client.Client"):
             client = MCPClient(server_url="https://mcp.example.com")
             client._tools = [
                 {
@@ -90,7 +91,7 @@ class TestMCPClient:
         mock_client_instance.__aenter__ = AsyncMock(return_value=mock_client_instance)
         mock_client_instance.__aexit__ = AsyncMock(return_value=None)
 
-        with patch('threads_multiagent.mcp.client.Client', return_value=mock_client_instance):
+        with patch("threads_multiagent.mcp.client.Client", return_value=mock_client_instance):
             client = MCPClient(server_url="https://mcp.example.com")
             tools = await client.list_tools()
 
@@ -104,7 +105,7 @@ class TestMCPClient:
         mock_client_instance = MagicMock()
         mock_client_instance.list_tools = AsyncMock()
 
-        with patch('threads_multiagent.mcp.client.Client', return_value=mock_client_instance):
+        with patch("threads_multiagent.mcp.client.Client", return_value=mock_client_instance):
             client = MCPClient(server_url="https://mcp.example.com")
             client._tools = [{"name": "cached_tool", "description": "Cached", "inputSchema": {}}]
 
@@ -128,12 +129,14 @@ class TestMCPClient:
         mock_client_instance.__aenter__ = AsyncMock(return_value=mock_client_instance)
         mock_client_instance.__aexit__ = AsyncMock(return_value=None)
 
-        with patch('threads_multiagent.mcp.client.Client', return_value=mock_client_instance):
+        with patch("threads_multiagent.mcp.client.Client", return_value=mock_client_instance):
             client = MCPClient(server_url="https://mcp.example.com")
             result = await client.call_tool("threads_post", {"text": "Hello"})
 
             assert '{"id": "123"' in result
-            mock_client_instance.call_tool.assert_called_once_with("threads_post", {"text": "Hello"})
+            mock_client_instance.call_tool.assert_called_once_with(
+                "threads_post", {"text": "Hello"}
+            )
 
     @pytest.mark.asyncio
     async def test_call_tool_no_content(self):
@@ -146,7 +149,7 @@ class TestMCPClient:
         mock_client_instance.__aenter__ = AsyncMock(return_value=mock_client_instance)
         mock_client_instance.__aexit__ = AsyncMock(return_value=None)
 
-        with patch('threads_multiagent.mcp.client.Client', return_value=mock_client_instance):
+        with patch("threads_multiagent.mcp.client.Client", return_value=mock_client_instance):
             client = MCPClient(server_url="https://mcp.example.com")
             result = await client.call_tool("some_tool", {})
 
@@ -164,7 +167,7 @@ class TestMCPClient:
         mock_client_instance.__aenter__ = AsyncMock(return_value=mock_client_instance)
         mock_client_instance.__aexit__ = AsyncMock(return_value=None)
 
-        with patch('threads_multiagent.mcp.client.Client', return_value=mock_client_instance):
+        with patch("threads_multiagent.mcp.client.Client", return_value=mock_client_instance):
             client = MCPClient(server_url="https://mcp.example.com")
             await client.call_tool("get_user_info")
 

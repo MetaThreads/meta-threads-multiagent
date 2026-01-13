@@ -1,7 +1,8 @@
 """Chat route with SSE streaming."""
 
 import json
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Any
 
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
@@ -39,11 +40,13 @@ async def generate_sse_events(
             # Emit agent status event
             yield {
                 "event": "agent",
-                "data": json.dumps({
-                    "type": "agent",
-                    "agent_name": node_name,
-                    "status": "completed",
-                }),
+                "data": json.dumps(
+                    {
+                        "type": "agent",
+                        "agent_name": node_name,
+                        "status": "completed",
+                    }
+                ),
             }
 
             # Emit content if there are new messages
@@ -53,10 +56,12 @@ async def generate_sse_events(
                 if last_msg.get("role") == "assistant":
                     yield {
                         "event": "token",
-                        "data": json.dumps({
-                            "type": "token",
-                            "content": last_msg.get("content", ""),
-                        }),
+                        "data": json.dumps(
+                            {
+                                "type": "token",
+                                "content": last_msg.get("content", ""),
+                            }
+                        ),
                     }
 
             # Emit tool calls if threads agent executed
@@ -65,30 +70,36 @@ async def generate_sse_events(
                 for result in threads_results:
                     yield {
                         "event": "tool_call",
-                        "data": json.dumps({
-                            "type": "tool_call",
-                            "tool_name": "threads_action",
-                            "tool_result": result.get("result"),
-                        }),
+                        "data": json.dumps(
+                            {
+                                "type": "tool_call",
+                                "tool_name": "threads_action",
+                                "tool_result": result.get("result"),
+                            }
+                        ),
                     }
 
         # Emit done event
         yield {
             "event": "done",
-            "data": json.dumps({
-                "type": "done",
-                "content": "Workflow completed successfully",
-            }),
+            "data": json.dumps(
+                {
+                    "type": "done",
+                    "content": "Workflow completed successfully",
+                }
+            ),
         }
 
     except Exception as e:
         logger.error(f"Error in SSE stream: {e}")
         yield {
             "event": "error",
-            "data": json.dumps({
-                "type": "error",
-                "error": str(e),
-            }),
+            "data": json.dumps(
+                {
+                    "type": "error",
+                    "error": str(e),
+                }
+            ),
         }
 
 
@@ -137,14 +148,16 @@ async def chat_sync(
 
     # Build agent trace
     agent_trace = []
-    if final_state.get("plan"):
-        plan = final_state["plan"]
+    plan = final_state.get("plan")
+    if plan is not None:
         for step in plan.get("steps", []):
-            agent_trace.append({
-                "agent": step.get("agent"),
-                "action": step.get("action"),
-                "completed": step.get("completed"),
-                "result": step.get("result"),
-            })
+            agent_trace.append(
+                {
+                    "agent": step.get("agent"),
+                    "action": step.get("action"),
+                    "completed": step.get("completed"),
+                    "result": step.get("result"),
+                }
+            )
 
     return ChatResponse(content=content, agent_trace=agent_trace)

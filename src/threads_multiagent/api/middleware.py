@@ -1,7 +1,7 @@
 """FastAPI middleware for error handling and logging."""
 
 import time
-from typing import Callable
+from collections.abc import Awaitable, Callable
 
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
@@ -24,7 +24,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self,
         request: Request,
-        call_next: Callable,
+        call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
         """Log request and response details."""
         start_time = time.time()
@@ -33,7 +33,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
         logger.info(f"Request: {request.method} {request.url.path}")
 
         # Process request
-        response = await call_next(request)
+        response: Response = await call_next(request)
 
         # Calculate duration
         duration = time.time() - start_time
@@ -53,11 +53,12 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self,
         request: Request,
-        call_next: Callable,
+        call_next: Callable[[Request], Awaitable[Response]],
     ) -> Response:
         """Handle exceptions and return appropriate responses."""
         try:
-            return await call_next(request)
+            response: Response = await call_next(request)
+            return response
 
         except LLMError as e:
             logger.error(f"LLM error: {e}")

@@ -137,7 +137,9 @@ class ThreadsAgent(BaseAgent):
                 snippet = result.get("snippet", "")
                 context_parts.append(f"- {title}: {snippet[:150]}...")
 
-        context_parts.append("\nPlease accomplish the user's goal using the available Threads tools.")
+        context_parts.append(
+            "\nPlease accomplish the user's goal using the available Threads tools."
+        )
 
         user_content = "\n".join(context_parts)
 
@@ -184,9 +186,7 @@ class ThreadsAgent(BaseAgent):
                 content = result.get("content", [])
                 if content and isinstance(content, list):
                     text_items = [
-                        item.get("text", str(item))
-                        for item in content
-                        if isinstance(item, dict)
+                        item.get("text", str(item)) for item in content if isinstance(item, dict)
                     ]
                     return "\n".join(text_items) if text_items else json.dumps(result, indent=2)
                 return json.dumps(result, indent=2)
@@ -241,7 +241,9 @@ class ThreadsAgent(BaseAgent):
                 results.append(result)
 
             # Combine results
-            final_result = "\n\n".join(results) if results else response_msg.content or "No action taken"
+            final_result = (
+                "\n\n".join(results) if results else response_msg.content or "No action taken"
+            )
             logger.info(f"Threads operation completed: {final_result[:100]}...")
 
             # Update state

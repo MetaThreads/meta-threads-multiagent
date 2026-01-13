@@ -3,8 +3,6 @@
 import os
 from unittest.mock import patch
 
-import pytest
-
 from threads_multiagent.config import Settings, get_settings
 
 
@@ -13,10 +11,13 @@ class TestSettings:
 
     def test_settings_from_env(self):
         """Test loading settings from environment."""
-        with patch.dict(os.environ, {
-            "OPENROUTER_API_KEY": "test-key",
-            "THREADS_BEARER_TOKEN": "test-token:12345",
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "OPENROUTER_API_KEY": "test-key",
+                "THREADS_BEARER_TOKEN": "test-token:12345",
+            },
+        ):
             # Clear the cache to get fresh settings
             get_settings.cache_clear()
             settings = Settings()
@@ -25,10 +26,13 @@ class TestSettings:
 
     def test_default_values(self):
         """Test default setting values."""
-        with patch.dict(os.environ, {
-            "OPENROUTER_API_KEY": "test-key",
-            "THREADS_BEARER_TOKEN": "test-token:12345",
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "OPENROUTER_API_KEY": "test-key",
+                "THREADS_BEARER_TOKEN": "test-token:12345",
+            },
+        ):
             settings = Settings()
             assert settings.openrouter_model == "google/gemini-2.5-flash-lite"
             assert settings.api_port == 8000
