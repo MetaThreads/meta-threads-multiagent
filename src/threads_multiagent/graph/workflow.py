@@ -166,7 +166,8 @@ class WorkflowRunner:
 
         # Run workflow
         final_state = await self._workflow.ainvoke(
-            initial_state, config=config  # type: ignore[arg-type]
+            initial_state,
+            config=config,  # type: ignore[arg-type]
         )
 
         # Flush traces
@@ -209,7 +210,8 @@ class WorkflowRunner:
             )
 
         async for event in self._workflow.astream(
-            initial_state, config=config  # type: ignore[arg-type]
+            initial_state,
+            config=config,  # type: ignore[arg-type]
         ):
             # Event contains node name and state
             for node_name, node_state in event.items():
