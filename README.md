@@ -194,7 +194,7 @@ src/threads_multiagent/
 
 ```bash
 # Install dev dependencies
-uv sync --dev
+uv sync --extra dev
 
 # Run tests
 uv run pytest
