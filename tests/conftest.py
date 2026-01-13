@@ -1,6 +1,26 @@
 """Pytest fixtures for tests."""
 
+import os
 import pytest
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_env():
+    """Set up test environment variables before any tests run."""
+    os.environ.setdefault("OPENROUTER_API_KEY", "test-api-key")
+    os.environ.setdefault("THREADS_BEARER_TOKEN", "test-token:12345")
+    os.environ.setdefault("THREADS_MCP_URL", "https://test.mcp.example.com/mcp")
+    os.environ.setdefault("LANGFUSE_ENABLED", "false")
+    yield
+
+
+@pytest.fixture(autouse=True)
+def clear_settings_cache():
+    """Clear settings cache before each test."""
+    from threads_hype_agent.config import get_settings
+    get_settings.cache_clear()
+    yield
+    get_settings.cache_clear()
 
 
 @pytest.fixture

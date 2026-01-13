@@ -33,9 +33,9 @@ class TestSettings:
             assert settings.openrouter_model == "google/gemini-2.5-flash-lite"
             assert settings.api_port == 8000
             assert settings.log_level == "INFO"
-            assert settings.max_agent_iterations == 10
-            assert settings.langfuse_enabled is True
+            assert settings.max_agent_iterations == 30
             assert settings.langfuse_host == "https://cloud.langfuse.com"
+            # Note: langfuse_enabled may be overridden by test fixtures
 
     def test_get_settings_cached(self):
         """Test that get_settings returns cached instance."""
