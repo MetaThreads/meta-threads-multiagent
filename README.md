@@ -93,10 +93,10 @@ LANGFUSE_HOST=https://cloud.langfuse.com
 
 ```bash
 # Using the CLI
-threads-hype-agent
+threads-multiagent
 
 # Or directly with Python
-python -m threads_hype_agent.api.app
+python -m threads_multiagent.api.app
 ```
 
 The API will be available at `http://localhost:8000`.
@@ -156,7 +156,7 @@ See `examples/client_example.py` for a complete streaming example.
 ## Project Structure
 
 ```
-src/threads_hype_agent/
+src/threads_multiagent/
 ├── agents/           # Agent implementations
 │   ├── base.py       # BaseAgent ABC with Langfuse tracing
 │   ├── planning.py   # Planning agent

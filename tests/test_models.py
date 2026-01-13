@@ -2,9 +2,9 @@
 
 import pytest
 
-from threads_hype_agent.models.messages import Conversation, Message
-from threads_hype_agent.models.agents import Plan, PlanStep
-from threads_hype_agent.models.api import ChatRequest, StreamEvent
+from threads_multiagent.models.messages import Conversation, Message
+from threads_multiagent.models.agents import Plan, PlanStep
+from threads_multiagent.models.api import ChatRequest, StreamEvent
 
 
 class TestMessage:

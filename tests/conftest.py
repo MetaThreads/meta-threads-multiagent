@@ -17,7 +17,7 @@ def setup_test_env():
 @pytest.fixture(autouse=True)
 def clear_settings_cache():
     """Clear settings cache before each test."""
-    from threads_hype_agent.config import get_settings
+    from threads_multiagent.config import get_settings
     get_settings.cache_clear()
     yield
     get_settings.cache_clear()

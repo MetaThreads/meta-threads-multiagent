@@ -3,12 +3,12 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from threads_hype_agent.agents.planning import PlanningAgent
-from threads_hype_agent.agents.orchestrator import OrchestratorAgent
-from threads_hype_agent.agents.web_search import WebSearchAgent
-from threads_hype_agent.agents.response import ResponseAgent
-from threads_hype_agent.models.agents import Plan, PlanStep
-from threads_hype_agent.search.base import SearchResult
+from threads_multiagent.agents.planning import PlanningAgent
+from threads_multiagent.agents.orchestrator import OrchestratorAgent
+from threads_multiagent.agents.web_search import WebSearchAgent
+from threads_multiagent.agents.response import ResponseAgent
+from threads_multiagent.models.agents import Plan, PlanStep
+from threads_multiagent.search.base import SearchResult
 
 
 @pytest.fixture
@@ -100,7 +100,7 @@ class TestPlanningAgent:
     @pytest.mark.asyncio
     async def test_invoke_no_user_message_raises(self, mock_llm):
         """Test that invoke raises when no user message."""
-        from threads_hype_agent.exceptions import PlanningError
+        from threads_multiagent.exceptions import PlanningError
 
         agent = PlanningAgent(mock_llm)
         state = {"messages": [{"role": "assistant", "content": "Hello"}]}
@@ -155,7 +155,7 @@ class TestOrchestratorAgent:
     @pytest.mark.asyncio
     async def test_invoke_no_plan_raises(self, mock_llm, sample_state):
         """Test invoke raises when no plan in state."""
-        from threads_hype_agent.exceptions import OrchestrationError
+        from threads_multiagent.exceptions import OrchestrationError
 
         agent = OrchestratorAgent(mock_llm)
         with pytest.raises(OrchestrationError):

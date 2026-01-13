@@ -2,8 +2,8 @@
 
 import pytest
 
-from threads_hype_agent.graph.state import AgentState, create_initial_state
-from threads_hype_agent.graph.edges import route_from_orchestrator, should_continue
+from threads_multiagent.graph.state import AgentState, create_initial_state
+from threads_multiagent.graph.edges import route_from_orchestrator, should_continue
 
 
 class TestAgentState:

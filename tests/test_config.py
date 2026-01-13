@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from threads_hype_agent.config import Settings, get_settings
+from threads_multiagent.config import Settings, get_settings
 
 
 class TestSettings:

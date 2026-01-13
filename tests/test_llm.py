@@ -3,9 +3,9 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from threads_hype_agent.llm.base import BaseLLMClient
-from threads_hype_agent.llm.openrouter import OpenRouterClient
-from threads_hype_agent.models.messages import Message
+from threads_multiagent.llm.base import BaseLLMClient
+from threads_multiagent.llm.openrouter import OpenRouterClient
+from threads_multiagent.models.messages import Message
 
 
 class TestBaseLLMClient:

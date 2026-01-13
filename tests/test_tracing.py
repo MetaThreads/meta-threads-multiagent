@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from threads_hype_agent.tracing.langfuse_tracer import LangfuseTracer, get_tracer
+from threads_multiagent.tracing.langfuse_tracer import LangfuseTracer, get_tracer
 
 
 class TestLangfuseTracer:
@@ -41,7 +41,7 @@ class TestLangfuseTracer:
         handler = tracer.get_callback_handler()
         assert handler is None
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_tracer_enabled_with_keys(self, mock_langfuse):
         """Test tracer is enabled when keys are provided."""
         tracer = LangfuseTracer(
@@ -56,8 +56,8 @@ class TestLangfuseTracer:
             host="https://test.langfuse.com",
         )
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.CallbackHandler")
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.CallbackHandler")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_get_callback_handler(self, mock_langfuse, mock_handler):
         """Test getting callback handler."""
         tracer = LangfuseTracer(
@@ -69,7 +69,7 @@ class TestLangfuseTracer:
         assert handler is not None
         mock_handler.assert_called_once_with()
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_build_config_metadata(self, mock_langfuse):
         """Test building config metadata for SDK v3."""
         tracer = LangfuseTracer(
@@ -90,7 +90,7 @@ class TestLangfuseTracer:
         assert "threads-hype-agent" in metadata["langfuse_tags"]
         assert metadata["key"] == "value"
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_build_config_metadata_minimal(self, mock_langfuse):
         """Test building config metadata with minimal args."""
         tracer = LangfuseTracer(
@@ -104,8 +104,8 @@ class TestLangfuseTracer:
         assert "langgraph" in metadata["langfuse_tags"]
         assert "threads-hype-agent" in metadata["langfuse_tags"]
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.get_client")
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.get_client")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_flush(self, mock_langfuse, mock_get_client):
         """Test flushing traces."""
         mock_client = MagicMock()
@@ -119,8 +119,8 @@ class TestLangfuseTracer:
 
         mock_client.flush.assert_called_once()
 
-    @patch("threads_hype_agent.tracing.langfuse_tracer.get_client")
-    @patch("threads_hype_agent.tracing.langfuse_tracer.Langfuse")
+    @patch("threads_multiagent.tracing.langfuse_tracer.get_client")
+    @patch("threads_multiagent.tracing.langfuse_tracer.Langfuse")
     def test_shutdown(self, mock_langfuse, mock_get_client):
         """Test shutting down tracer."""
         mock_client = MagicMock()

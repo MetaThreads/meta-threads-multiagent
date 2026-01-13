@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 
-from threads_hype_agent.graph.nodes import (
+from threads_multiagent.graph.nodes import (
     planning_node,
     orchestrator_node,
     threads_node,

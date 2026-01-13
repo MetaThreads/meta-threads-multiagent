@@ -44,7 +44,7 @@ dev = [
 ]
 
 [project.scripts]
-threads-hype-agent = "threads_hype_agent.api.app:main"
+threads-multiagent = "threads_multiagent.api.app:main"
 
 [project.urls]
 Homepage = "https://github.com/MetaThreads/meta-threads-multiagent"
@@ -55,7 +55,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/threads_hype_agent"]
+packages = ["src/threads_multiagent"]
 
 [tool.ruff]
 target-version = "py312"
@@ -80,7 +80,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["threads_hype_agent"]
+known-first-party = ["threads_multiagent"]
 
 [tool.mypy]
 python_version = "3.12"
@@ -93,10 +93,10 @@ plugins = ["pydantic.mypy"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = "-v --cov=threads_hype_agent --cov-report=term-missing --cov-report=html"
+addopts = "-v --cov=threads_multiagent --cov-report=term-missing --cov-report=html"
 
 [tool.coverage.run]
-source = ["src/threads_hype_agent"]
+source = ["src/threads_multiagent"]
 branch = true
 omit = [
     "*/tests/*",

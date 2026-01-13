@@ -2,15 +2,15 @@
 
 import asyncio
 
-from threads_hype_agent.agents.orchestrator import OrchestratorAgent
-from threads_hype_agent.agents.planning import PlanningAgent
-from threads_hype_agent.agents.response import ResponseAgent
-from threads_hype_agent.agents.threads import ThreadsAgent
-from threads_hype_agent.agents.web_search import WebSearchAgent
-from threads_hype_agent.config import get_settings
-from threads_hype_agent.graph.workflow import WorkflowRunner
-from threads_hype_agent.llm.openrouter import OpenRouterClient
-from threads_hype_agent.search.duckduckgo import DuckDuckGoSearch
+from threads_multiagent.agents.orchestrator import OrchestratorAgent
+from threads_multiagent.agents.planning import PlanningAgent
+from threads_multiagent.agents.response import ResponseAgent
+from threads_multiagent.agents.threads import ThreadsAgent
+from threads_multiagent.agents.web_search import WebSearchAgent
+from threads_multiagent.config import get_settings
+from threads_multiagent.graph.workflow import WorkflowRunner
+from threads_multiagent.llm.openrouter import OpenRouterClient
+from threads_multiagent.search.duckduckgo import DuckDuckGoSearch
 
 
 async def main():

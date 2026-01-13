@@ -3,8 +3,8 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from threads_hype_agent.search.base import BaseWebSearch, SearchResult
-from threads_hype_agent.search.duckduckgo import DuckDuckGoSearch
+from threads_multiagent.search.base import BaseWebSearch, SearchResult
+from threads_multiagent.search.duckduckgo import DuckDuckGoSearch
 
 
 class TestSearchResult:
@@ -92,7 +92,7 @@ class TestDuckDuckGoSearch:
         """Test that _search_sync handles exceptions gracefully."""
         search = DuckDuckGoSearch()
 
-        with patch('threads_hype_agent.search.duckduckgo.DDGS') as mock_ddgs:
+        with patch('threads_multiagent.search.duckduckgo.DDGS') as mock_ddgs:
             mock_ddgs.return_value.__enter__.return_value.text.side_effect = Exception("API Error")
             results = search._search_sync("test", 5)
             assert results == []
@@ -106,7 +106,7 @@ class TestDuckDuckGoSearch:
             {"title": "Test", "href": "https://test.com", "body": "snippet"}
         ]
 
-        with patch('threads_hype_agent.search.duckduckgo.DDGS') as mock_ddgs:
+        with patch('threads_multiagent.search.duckduckgo.DDGS') as mock_ddgs:
             mock_ddgs.return_value.__enter__.return_value = mock_ddgs_instance
             results = search._search_sync("test", 5)
 

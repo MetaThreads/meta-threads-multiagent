@@ -3,7 +3,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from threads_hype_agent.api.app import create_app
+from threads_multiagent.api.app import create_app
 
 
 @pytest.fixture
