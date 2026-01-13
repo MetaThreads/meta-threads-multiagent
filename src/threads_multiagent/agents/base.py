@@ -1,8 +1,9 @@
 """Base agent abstraction with Langfuse tracing support."""
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from langfuse import observe
 
@@ -27,17 +28,18 @@ def traced_tool(name: str | None = None) -> Callable[[Callable[..., T]], Callabl
     Returns:
         Decorated function with Langfuse tracing.
     """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         tool_name = name or func.__name__
 
         @wraps(func)
-        async def async_wrapper(*args: Any, **kwargs: Any) -> T:
+        async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
             settings = get_settings()
             if settings.langfuse_enabled:
                 # Use observe decorator dynamically
                 observed_func = observe(as_type="tool", name=tool_name)(func)
-                return await observed_func(*args, **kwargs)
-            return await func(*args, **kwargs)
+                return await observed_func(*args, **kwargs)  # type: ignore[misc]
+            return await func(*args, **kwargs)  # type: ignore[misc]
 
         @wraps(func)
         def sync_wrapper(*args: Any, **kwargs: Any) -> T:
@@ -49,9 +51,10 @@ def traced_tool(name: str | None = None) -> Callable[[Callable[..., T]], Callabl
 
         # Return appropriate wrapper based on function type
         import asyncio
+
         if asyncio.iscoroutinefunction(func):
-            return async_wrapper  # type: ignore
-        return sync_wrapper  # type: ignore
+            return async_wrapper  # type: ignore[return-value]
+        return sync_wrapper
 
     return decorator
 
@@ -159,12 +162,13 @@ class BaseAgent(ABC):
             # Wrap with observe decorator
             observed_func = observe(as_type="tool", name=tool_name)(tool_func)
             import asyncio
+
             if asyncio.iscoroutinefunction(tool_func):
                 return await observed_func(*args, **kwargs)
             return observed_func(*args, **kwargs)
         else:
             import asyncio
+
             if asyncio.iscoroutinefunction(tool_func):
                 return await tool_func(*args, **kwargs)
             return tool_func(*args, **kwargs)
-

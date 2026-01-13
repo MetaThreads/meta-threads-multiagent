@@ -1,7 +1,8 @@
 """Tests for web search implementations."""
 
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 
 from threads_multiagent.search.base import BaseWebSearch, SearchResult
 from threads_multiagent.search.duckduckgo import DuckDuckGoSearch
@@ -66,22 +67,18 @@ class TestDuckDuckGoSearch:
         """Test search with mocked DDGS."""
         search = DuckDuckGoSearch()
 
-        mock_results = [
-            {
-                "title": "Test Article",
-                "href": "https://example.com/article",
-                "body": "Test snippet content",
-            }
-        ]
-
-        with patch.object(search, '_search_sync', return_value=[
-            SearchResult(
-                title="Test Article",
-                url="https://example.com/article",
-                snippet="Test snippet content",
-                source="example.com",
-            )
-        ]):
+        with patch.object(
+            search,
+            "_search_sync",
+            return_value=[
+                SearchResult(
+                    title="Test Article",
+                    url="https://example.com/article",
+                    snippet="Test snippet content",
+                    source="example.com",
+                )
+            ],
+        ):
             results = await search.search("test query", limit=5)
 
             assert len(results) == 1
@@ -92,7 +89,7 @@ class TestDuckDuckGoSearch:
         """Test that _search_sync handles exceptions gracefully."""
         search = DuckDuckGoSearch()
 
-        with patch('threads_multiagent.search.duckduckgo.DDGS') as mock_ddgs:
+        with patch("threads_multiagent.search.duckduckgo.DDGS") as mock_ddgs:
             mock_ddgs.return_value.__enter__.return_value.text.side_effect = Exception("API Error")
             results = search._search_sync("test", 5)
             assert results == []
@@ -106,7 +103,7 @@ class TestDuckDuckGoSearch:
             {"title": "Test", "href": "https://test.com", "body": "snippet"}
         ]
 
-        with patch('threads_multiagent.search.duckduckgo.DDGS') as mock_ddgs:
+        with patch("threads_multiagent.search.duckduckgo.DDGS") as mock_ddgs:
             mock_ddgs.return_value.__enter__.return_value = mock_ddgs_instance
             results = search._search_sync("test", 5)
 

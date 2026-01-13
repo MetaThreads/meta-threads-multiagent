@@ -1,7 +1,8 @@
 """Tests for LLM module."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 from threads_multiagent.llm.base import BaseLLMClient
 from threads_multiagent.llm.openrouter import OpenRouterClient

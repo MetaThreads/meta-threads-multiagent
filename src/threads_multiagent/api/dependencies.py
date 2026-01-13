@@ -7,7 +7,7 @@ from threads_multiagent.agents.planning import PlanningAgent
 from threads_multiagent.agents.response import ResponseAgent
 from threads_multiagent.agents.threads import ThreadsAgent
 from threads_multiagent.agents.web_search import WebSearchAgent
-from threads_multiagent.config import Settings, get_settings
+from threads_multiagent.config import get_settings
 from threads_multiagent.graph.workflow import WorkflowRunner
 from threads_multiagent.llm.openrouter import OpenRouterClient
 from threads_multiagent.logging import get_logger

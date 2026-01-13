@@ -48,7 +48,7 @@ class DuckDuckGoSearch(BaseWebSearch):
 
         # Log results for debugging
         for i, r in enumerate(results):
-            logger.debug(f"Result {i+1}: {r.title} - {r.source}")
+            logger.debug(f"Result {i + 1}: {r.title} - {r.source}")
 
         return results
 
@@ -132,11 +132,13 @@ async def test_search(query: str, limit: int = 5) -> list[dict[str, Any]]:
         print(f"   Source: {r.source}")
         print(f"   Snippet: {r.snippet[:150]}...")
         print()
-        result_dicts.append({
-            "title": r.title,
-            "url": r.url,
-            "source": r.source,
-            "snippet": r.snippet,
-        })
+        result_dicts.append(
+            {
+                "title": r.title,
+                "url": r.url,
+                "source": r.source,
+                "snippet": r.snippet,
+            }
+        )
 
     return result_dicts

@@ -2,9 +2,9 @@
 
 import pytest
 
-from threads_multiagent.models.messages import Conversation, Message
 from threads_multiagent.models.agents import Plan, PlanStep
 from threads_multiagent.models.api import ChatRequest, StreamEvent
+from threads_multiagent.models.messages import Conversation, Message
 
 
 class TestMessage:
@@ -47,28 +47,34 @@ class TestConversation:
 
     def test_to_openai_format(self):
         """Test conversion to OpenAI format."""
-        conv = Conversation(messages=[
-            Message(role="user", content="Hello"),
-            Message(role="assistant", content="Hi!"),
-        ])
+        conv = Conversation(
+            messages=[
+                Message(role="user", content="Hello"),
+                Message(role="assistant", content="Hi!"),
+            ]
+        )
         result = conv.to_openai_format()
         assert len(result) == 2
         assert result[0]["role"] == "user"
 
     def test_get_last_user_message(self):
         """Test getting last user message."""
-        conv = Conversation(messages=[
-            Message(role="user", content="First"),
-            Message(role="assistant", content="Response"),
-            Message(role="user", content="Second"),
-        ])
+        conv = Conversation(
+            messages=[
+                Message(role="user", content="First"),
+                Message(role="assistant", content="Response"),
+                Message(role="user", content="Second"),
+            ]
+        )
         assert conv.get_last_user_message() == "Second"
 
     def test_get_last_user_message_empty(self):
         """Test getting last user message when none exists."""
-        conv = Conversation(messages=[
-            Message(role="assistant", content="Hello"),
-        ])
+        conv = Conversation(
+            messages=[
+                Message(role="assistant", content="Hello"),
+            ]
+        )
         assert conv.get_last_user_message() is None
 
 
@@ -155,9 +161,11 @@ class TestChatRequest:
 
     def test_create_request(self):
         """Test creating a chat request."""
-        request = ChatRequest(messages=[
-            Message(role="user", content="Hello"),
-        ])
+        request = ChatRequest(
+            messages=[
+                Message(role="user", content="Hello"),
+            ]
+        )
         assert len(request.messages) == 1
 
 

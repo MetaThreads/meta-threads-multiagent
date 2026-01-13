@@ -1,10 +1,11 @@
 """Tests for workflow module."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from threads_multiagent.graph.workflow import build_workflow, WorkflowRunner
+import pytest
+
 from threads_multiagent.graph.state import create_initial_state
+from threads_multiagent.graph.workflow import WorkflowRunner, build_workflow
 
 
 @pytest.fixture
@@ -68,7 +69,7 @@ class TestWorkflowRunner:
 
     def test_initialization(self, mock_agents, mock_tracer):
         """Test runner initialization."""
-        with patch('threads_multiagent.graph.workflow.get_tracer', return_value=mock_tracer):
+        with patch("threads_multiagent.graph.workflow.get_tracer", return_value=mock_tracer):
             runner = WorkflowRunner(
                 planning_agent=mock_agents["planning"],
                 orchestrator_agent=mock_agents["orchestrator"],
@@ -102,7 +103,7 @@ class TestWorkflowRunner:
             "output": "Final output",
         }
 
-        with patch('threads_multiagent.graph.workflow.build_workflow') as mock_build:
+        with patch("threads_multiagent.graph.workflow.build_workflow") as mock_build:
             mock_workflow = MagicMock()
             mock_workflow.ainvoke = AsyncMock(return_value=expected_state)
             mock_build.return_value = mock_workflow
@@ -127,7 +128,7 @@ class TestWorkflowRunner:
         """Test workflow run with user and session IDs."""
         mock_tracer.get_callback_handler.return_value = MagicMock()
 
-        with patch('threads_multiagent.graph.workflow.build_workflow') as mock_build:
+        with patch("threads_multiagent.graph.workflow.build_workflow") as mock_build:
             mock_workflow = MagicMock()
             mock_workflow.ainvoke = AsyncMock(return_value={})
             mock_build.return_value = mock_workflow
@@ -152,12 +153,13 @@ class TestWorkflowRunner:
     @pytest.mark.asyncio
     async def test_stream(self, mock_agents, mock_tracer):
         """Test workflow stream method."""
-        async def mock_astream(*args, **kwargs):
+
+        async def mock_astream(*_args, **_kwargs):
             yield {"planning": {"messages": []}}
             yield {"orchestrator": {"next_agent": "response"}}
             yield {"response": {"output": "Done"}}
 
-        with patch('threads_multiagent.graph.workflow.build_workflow') as mock_build:
+        with patch("threads_multiagent.graph.workflow.build_workflow") as mock_build:
             mock_workflow = MagicMock()
             mock_workflow.astream = mock_astream
             mock_build.return_value = mock_workflow

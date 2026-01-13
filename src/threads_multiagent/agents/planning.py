@@ -1,7 +1,7 @@
 """Planning agent implementation with tool-based paradigm."""
 
 import json
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from langfuse import observe
 
@@ -13,7 +13,7 @@ from threads_multiagent.models.messages import Message
 from threads_multiagent.prompts.planning import PLANNING_PROMPT
 
 if TYPE_CHECKING:
-    from threads_multiagent.graph.state import AgentState
+    from threads_multiagent.graph.state import AgentState, PlanDict
 
 logger = get_logger(__name__)
 
@@ -82,7 +82,7 @@ class PlanningAgent(BaseAgent):
 
                     steps.append(
                         PlanStep(
-                            agent=agent,  # type: ignore
+                            agent=agent,
                             action=step_data.get("action", ""),
                             completed=False,
                         )
@@ -99,11 +99,19 @@ class PlanningAgent(BaseAgent):
 
         return self._create_fallback_plan(user_message, response)
 
-    def _create_fallback_plan(self, user_message: str, response: str) -> Plan:
+    def _create_fallback_plan(self, user_message: str, _response: str) -> Plan:
         """Create a fallback plan when JSON parsing fails."""
         steps: list[PlanStep] = []
 
-        search_keywords = ["news", "trending", "latest", "search", "find", "research", "information"]
+        search_keywords = [
+            "news",
+            "trending",
+            "latest",
+            "search",
+            "find",
+            "research",
+            "information",
+        ]
         if any(kw in user_message.lower() for kw in search_keywords):
             steps.append(
                 PlanStep(
@@ -172,7 +180,7 @@ class PlanningAgent(BaseAgent):
 
             # Update state
             new_state = state.copy()
-            new_state["plan"] = plan.model_dump()
+            new_state["plan"] = cast("PlanDict", plan.model_dump())
             new_state["messages"] = state["messages"] + [
                 {"role": "assistant", "content": f"Plan created: {plan.goal}"}
             ]

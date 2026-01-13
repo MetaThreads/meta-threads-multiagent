@@ -1,8 +1,10 @@
 """LangGraph workflow assembly."""
 
-from typing import Any, AsyncIterator
+from collections.abc import AsyncIterator
+from typing import Any
 
 from langgraph.graph import END, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from threads_multiagent.agents.orchestrator import OrchestratorAgent
 from threads_multiagent.agents.planning import PlanningAgent
@@ -24,7 +26,7 @@ def build_workflow(
     threads_agent: ThreadsAgent,
     response_agent: ResponseAgent,
     web_search_agent: WebSearchAgent,
-) -> StateGraph:
+) -> CompiledStateGraph[AgentState]:
     """Build the LangGraph workflow.
 
     Creates a workflow with the following structure:
@@ -87,7 +89,7 @@ def build_workflow(
     workflow.add_edge("response", END)
 
     logger.info("Built workflow graph")
-    return workflow.compile()
+    return workflow.compile()  # type: ignore[return-value]
 
 
 class WorkflowRunner:
@@ -118,7 +120,7 @@ class WorkflowRunner:
             max_iterations: Maximum workflow iterations.
             tracer: Optional Langfuse tracer for observability.
         """
-        self._workflow = build_workflow(
+        self._workflow: CompiledStateGraph[AgentState] = build_workflow(
             planning_agent,
             orchestrator_agent,
             threads_agent,
@@ -163,13 +165,15 @@ class WorkflowRunner:
             )
 
         # Run workflow
-        final_state = await self._workflow.ainvoke(initial_state, config=config)
+        final_state = await self._workflow.ainvoke(
+            initial_state, config=config  # type: ignore[arg-type]
+        )
 
         # Flush traces
         self._tracer.flush()
 
         logger.info("Workflow run completed")
-        return final_state
+        return final_state  # type: ignore[return-value]
 
     async def stream(
         self,
@@ -204,7 +208,9 @@ class WorkflowRunner:
                 metadata={"message_count": len(messages), "streaming": True},
             )
 
-        async for event in self._workflow.astream(initial_state, config=config):
+        async for event in self._workflow.astream(
+            initial_state, config=config  # type: ignore[arg-type]
+        ):
             # Event contains node name and state
             for node_name, node_state in event.items():
                 yield {

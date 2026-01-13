@@ -62,10 +62,12 @@ class ResponseAgent(BaseAgent):
 
         web_results = state.get("web_search_results", [])
         if web_results:
-            search_summary = "\n".join([
-                f"- {result['title']} ({result['source']}): {result['snippet'][:100]}..."
-                for result in web_results[:5]
-            ])
+            search_summary = "\n".join(
+                [
+                    f"- {result['title']} ({result['source']}): {result['snippet'][:100]}..."
+                    for result in web_results[:5]
+                ]
+            )
             parts.append(f"\nWeb search results:\n{search_summary}")
 
         threads_results = state.get("threads_results", [])
@@ -130,9 +132,7 @@ class ResponseAgent(BaseAgent):
             # Update state
             new_state = state.copy()
             new_state["output"] = output
-            new_state["messages"] = state["messages"] + [
-                {"role": "assistant", "content": output}
-            ]
+            new_state["messages"] = state["messages"] + [{"role": "assistant", "content": output}]
 
             return new_state
 

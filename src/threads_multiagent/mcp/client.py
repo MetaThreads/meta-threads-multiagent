@@ -1,9 +1,10 @@
 """MCP client for FastMCP server connection."""
 
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 
-from fastmcp import Client
 import httpx
+from fastmcp import Client
 
 from threads_multiagent.logging import get_logger
 
@@ -67,7 +68,9 @@ class MCPClient:
                 {
                     "name": tool.name,
                     "description": tool.description or "",
-                    "inputSchema": tool.inputSchema if hasattr(tool, "inputSchema") else {"type": "object", "properties": {}},
+                    "inputSchema": tool.inputSchema
+                    if hasattr(tool, "inputSchema")
+                    else {"type": "object", "properties": {}},
                 }
                 for tool in tools
             ]
@@ -115,12 +118,14 @@ class MCPClient:
 
         openai_tools = []
         for tool in self._tools:
-            openai_tools.append({
-                "type": "function",
-                "function": {
-                    "name": tool.get("name", ""),
-                    "description": tool.get("description", ""),
-                    "parameters": tool.get("inputSchema", {"type": "object", "properties": {}}),
-                },
-            })
+            openai_tools.append(
+                {
+                    "type": "function",
+                    "function": {
+                        "name": tool.get("name", ""),
+                        "description": tool.get("description", ""),
+                        "parameters": tool.get("inputSchema", {"type": "object", "properties": {}}),
+                    },
+                }
+            )
         return openai_tools
